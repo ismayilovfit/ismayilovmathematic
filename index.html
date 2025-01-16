@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İSMAYILOV FITNESS</title>
+    <style>
+        /* Ümumi Stil */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: linear-gradient(to right, #00b4d8, #90e0ef); /* Gradient fon */
+            color: #333;
+        }
+
+        header {
+            background-color: #222;
+            color: #f1f1f1;
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        h1 {
+            font-size: 4em;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            animation: slideIn 2s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #calculator {
+            background-color: #fff;
+            padding: 30px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #calculator h2 {
+            color: #333;
+        }
+
+        input, button {
+            width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            font-size: 1.2em;
+        }
+
+        input:focus {
+            border-color: #28a745; /* Fokusda olan inputun sərhədi yaşıl olacaq */
+            outline: none;
+        }
+
+        button {
+            background-color: #28a745;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.1); /* Düymə biraz böyüyəcək */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #result {
+            font-size: 2em;
+            color: #28a745;
+            font-weight: bold;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>İSMAYILOV FITNESS</h1> <!-- Saytın başlığı -->
+    </header>
+
+    <section id="calculator">
+        <h2>Gündəlik Protein Ehtiyacını Hesabla</h2>
+        <form id="proteinForm">
+            <label for="weight">Çəkini (kq) daxil et:</label>
+            <input type="number" id="weight" required>
+
+            <button type="submit">Hesabla</button>
+        </form>
+
+        <div id="result"></div> <!-- Hesablanan nəticəni göstərmək üçün div -->
+    </section>
+
+    <footer>
+        <p>&copy; 2025 İSMAYILOV FITNESS | Bütün hüquqlar qorunur.</p>
+    </footer>
+
+    <script>
+        // JavaScript - Gündəlik Protein Hesablayıcı
+        document.getElementById('proteinForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let weight = document.getElementById('weight').value;
+            if (weight) {
+                let proteinNeed = weight * 2; // Bu, ortalama bir protein ehtiyacıdır (2 q/kq).
+                document.getElementById('result').innerHTML = `Gündəlik protein ehtiyacınız: <strong>${proteinNeed} q</strong>`;
+            } else {
+                document.getElementById('result').innerHTML = 'Zəhmət olmasa çəkini daxil edin!';
+            }
+        });
+    </script>
+</body>
+</html>
