@@ -3,128 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İSMAYILOV FITNESS</title>
+    <title>İsmayılov Math - Riyazi Analiz 1 və 2 Düsturları</title>
     <style>
-        /* Ümumi Stil */
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        header {
-            background-color: #333;
-            color: white;
+            background: linear-gradient(135deg, #3b5998, #192f6a);
+            color: #fff;
             text-align: center;
-            padding: 50px 0;
-        }
-
-        h1 {
-            font-size: 3em;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
-
-        #chatContainer {
-            background-color: #fff;
             padding: 30px;
-            margin: 20px auto;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
-
-        #chatContainer h2 {
-            color: #333;
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease;
         }
-
-        #messages {
-            height: 200px;
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #f5f5f5;
-        }
-
-        input, button {
-            width: 80%;
-            margin: 10px 0;
-            padding: 10px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            font-size: 1.2em;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            font-size: 1.2em;
-            border: none;
-            border-radius: 5px;
+        .formula-title {
             cursor: pointer;
+            background: #4c69ba;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px auto;
+            width: 70%;
+            font-size: 1.5em;
+            transition: 0.3s;
         }
-
-        button:hover {
-            background-color: #218838;
+        .formula-title:hover {
+            background: #3b5998;
         }
-
-        footer {
-            text-align: center;
-            background-color: #333;
-            color: white;
-            padding: 10px;
+        .formula-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: #f0f0f0;
+            color: #333;
+            padding: 0 20px;
+            border-radius: 15px;
+            margin: 10px auto;
+            width: 70%;
+            text-align: left;
+        }
+        .formula-content.active {
+            max-height: 500px;
+            padding: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>İSMAYILOV FITNESS</h1>
-    </header>
-
-    <section id="chatContainer">
-        <h2>İnteraktiv Mesajlaşma</h2>
-        <div id="messages"></div> <!-- Mesajlar burada göstəriləcək -->
-        <input type="text" id="messageInput" placeholder="Mesajınızı yazın...">
-        <button id="sendButton">Göndər</button>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 İSMAYILOV FITNESS | Bütün hüquqlar qorunur.</p>
-    </footer>
-
+    <h1>İsmayılov Math</h1>
+    <div class="formula-title" onclick="toggleFormula('limit')">Limitlər və Davamlılıq</div>
+    <div class="formula-content" id="limit">
+        <ul>
+            <li>lim (x → a) f(x) = L</li>
+            <li>lim (x → ∞) f(x) = L</li>
+            <li>Davamlılıq: f(x) nöqtədə davamlıdır əgər lim (x → c) f(x) = f(c)</li>
+        </ul>
+    </div>
+    <div class="formula-title" onclick="toggleFormula('derivative')">Törəmələr və Diferensiallar</div>
+    <div class="formula-content" id="derivative">
+        <ul>
+            <li>f'(x) = lim (h → 0) (f(x+h) - f(x))/h</li>
+            <li>(u · v)' = u'v + uv'</li>
+            <li>(u/v)' = (u'v - uv')/v²</li>
+        </ul>
+    </div>
+    <div class="formula-title" onclick="toggleFormula('integral')">İnteqrallar</div>
+    <div class="formula-content" id="integral">
+        <ul>
+            <li>∫ xⁿ dx = (xⁿ⁺¹)/(n+1) + C</li>
+            <li>∫ eˣ dx = eˣ + C</li>
+            <li>∫ (1/x) dx = ln|x| + C</li>
+        </ul>
+    </div>
+    <div class="formula-title" onclick="toggleFormula('series')">Seriyalar və Cəmlər</div>
+    <div class="formula-content" id="series">
+        <ul>
+            <li>Aritmetik silsilə: Sₙ = (n/2)(a₁ + aₙ)</li>
+            <li>Həndəsi silsilə: Sₙ = a₁(1-rⁿ)/(1-r)</li>
+            <li>Sonsuz həndəsi silsilə: S = a₁/(1-r)</li>
+        </ul>
+    </div>
     <script>
-        const socket = new WebSocket('ws://localhost:8080'); // WebSocket serverə qoşulma
-
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const messages = document.getElementById('messages');
-
-        // Serverdən gələn mesajları göstərmək
-        socket.onmessage = (event) => {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = event.data;
-            messages.appendChild(messageElement);
-            messages.scrollTop = messages.scrollHeight; // Yuxarıya doğru kaydır
-        };
-
-        // Mesaj göndərmə
-        sendButton.addEventListener('click', () => {
-            const message = messageInput.value.trim();
-            if (message) {
-                socket.send(message); // Mesajı WebSocket serverə göndər
-                messageInput.value = ''; // Mesajı göndərdikdən sonra inputu təmizləyir
-            }
-        });
-
-        // Enter düyməsi ilə mesaj göndərmək
-        messageInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                sendButton.click();
-            }
-        });
+        function toggleFormula(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
