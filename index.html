@@ -3,93 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İsmayılov Math - Riyazi Analiz 1 və 2 Düsturları</title>
+    <title>İsmayılov Store</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #3b5998, #192f6a);
-            color: #fff;
-            text-align: center;
-            padding: 30px;
-        }
-        h1 {
-            font-size: 4em;
-            margin-bottom: 20px;
-            animation: fadeIn 2s ease;
-        }
-        .formula-title {
-            cursor: pointer;
-            background: #4c69ba;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 10px auto;
-            width: 70%;
-            font-size: 1.5em;
-            transition: 0.3s;
-        }
-        .formula-title:hover {
-            background: #3b5998;
-        }
-        .formula-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-            background: #f0f0f0;
-            color: #333;
-            padding: 0 20px;
-            border-radius: 15px;
-            margin: 10px auto;
-            width: 70%;
-            text-align: left;
-        }
-        .formula-content.active {
-            max-height: 500px;
-            padding: 20px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        body { font-family: Arial, sans-serif; background-color: #fff8e1; margin: 0; padding: 0; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; text-align: center; }
+        h2 { color: #ff9800; }
+        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+        button { background-color: #ff9800; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #e68900; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <h1>İsmayılov Math</h1>
-    <div class="formula-title" onclick="toggleFormula('limit')">Limitlər və Davamlılıq</div>
-    <div class="formula-content" id="limit">
-        <ul>
-            <li>lim (x → a) f(x) = L</li>
-            <li>lim (x → ∞) f(x) = L</li>
-            <li>Davamlılıq: f(x) nöqtədə davamlıdır əgər lim (x → c) f(x) = f(c)</li>
-        </ul>
+    <div class="container" id="kaydol">
+        <h2>Kaydol</h2>
+        <input type="text" id="usernameKaydol" placeholder="Kullanıcı Adı">
+        <input type="password" id="passwordKaydol" placeholder="Şifre">
+        <button onclick="kaydol()">Kaydol</button>
+        <p>Hesabın var? <span style="color: #ff9800; cursor: pointer;" onclick="showGiris()">Giriş Yap</span></p>
     </div>
-    <div class="formula-title" onclick="toggleFormula('derivative')">Törəmələr və Diferensiallar</div>
-    <div class="formula-content" id="derivative">
-        <ul>
-            <li>f'(x) = lim (h → 0) (f(x+h) - f(x))/h</li>
-            <li>(u · v)' = u'v + uv'</li>
-            <li>(u/v)' = (u'v - uv')/v²</li>
-        </ul>
+    <div class="container hidden" id="giris">
+        <h2>Giriş Yap</h2>
+        <input type="text" id="usernameGiris" placeholder="Kullanıcı Adı">
+        <input type="password" id="passwordGiris" placeholder="Şifre">
+        <button onclick="giris()">Giriş Yap</button>
+        <p>Hesabın yok? <span style="color: #ff9800; cursor: pointer;" onclick="showKaydol()">Kaydol</span></p>
     </div>
-    <div class="formula-title" onclick="toggleFormula('integral')">İnteqrallar</div>
-    <div class="formula-content" id="integral">
-        <ul>
-            <li>∫ xⁿ dx = (xⁿ⁺¹)/(n+1) + C</li>
-            <li>∫ eˣ dx = eˣ + C</li>
-            <li>∫ (1/x) dx = ln|x| + C</li>
-        </ul>
-    </div>
-    <div class="formula-title" onclick="toggleFormula('series')">Seriyalar və Cəmlər</div>
-    <div class="formula-content" id="series">
-        <ul>
-            <li>Aritmetik silsilə: Sₙ = (n/2)(a₁ + aₙ)</li>
-            <li>Həndəsi silsilə: Sₙ = a₁(1-rⁿ)/(1-r)</li>
-            <li>Sonsuz həndəsi silsilə: S = a₁/(1-r)</li>
-        </ul>
+    <div class="container hidden" id="mehsul">
+        <h2>Məhsul Əlavə Et</h2>
+        <input type="text" id="urunAdi" placeholder="Ürün Adı">
+        <input type="text" id="fiyat" placeholder="Fiyat (₼)">
+        <input type="text" id="aciklama" placeholder="Açıklama">
+        <input type="file" id="urunFoto" accept="image/*">
+        <input type="text" id="telefon" placeholder="Telefon Nömrəsi">
+        <button onclick="urunEkle()">Əlavə Et</button>
+        <p id="urunSayisi">Qalan haqq: 2</p>
     </div>
     <script>
-        function toggleFormula(id) {
-            const content = document.getElementById(id);
-            content.classList.toggle('active');
+        let kullanicilar = [];
+        let urunSayisi = 2;
+
+        function kaydol() {
+            const username = document.getElementById("usernameKaydol").value;
+            const password = document.getElementById("passwordKaydol").value;
+            if (username && password) {
+                fetch('http://localhost:3000/kaydol', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    showGiris();
+                })
+                .catch(error => alert("Xəta baş verdi!"));
+            } else {
+                alert("Bütün sahələri doldurun!");
+            }
+        }
+
+        function giris() {
+            const username = document.getElementById("usernameGiris").value;
+            const password = document.getElementById("passwordGiris").value;
+            fetch('http://localhost:3000/giris', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Uğurla daxil oldunuz!') {
+                    alert(data.message);
+                    showMehsul();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => alert("Xəta baş verdi!"));
+        }
+
+        function urunEkle() {
+            const foto = document.getElementById("urunFoto").files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const urunResmi = e.target.result;
+                const urunAdi = document.getElementById("urunAdi").value;
+                const fiyat = document.getElementById("fiyat").value;
+                const aciklama = document.getElementById("aciklama").value;
+                const telefon = document.getElementById("telefon").value;
+                
+                if (urunAdi && fiyat && aciklama && telefon && urunResmi) {
+                    fetch('http://localhost:3000/urunEkle', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ urunAdi, fiyat, aciklama, telefon, foto: urunResmi })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        urunSayisi--;
+                        document.getElementById("urunSayisi").innerText = "Qalan haqq: " + urunSayisi;
+                    })
+                    .catch(error => alert("Xəta baş verdi!"));
+                } else {
+                    alert("Bütün sahələri doldurun!");
+                }
+            };
+            reader.readAsDataURL(foto);
+        }
+
+        function showKaydol() {
+            document.getElementById("kaydol").classList.remove("hidden");
+            document.getElementById("giris").classList.add("hidden");
+            document.getElementById("mehsul").classList.add("hidden");
+        }
+
+        function showGiris() {
+            document.getElementById("kaydol").classList.add("hidden");
+            document.getElementById("giris").classList.remove("hidden");
+            document.getElementById("mehsul").classList.add("hidden");
+        }
+
+        function showMehsul() {
+            document.getElementById("kaydol").classList.add("hidden");
+            document.getElementById("giris").classList.add("hidden");
+            document.getElementById("mehsul").classList.remove("hidden");
         }
     </script>
 </body>
